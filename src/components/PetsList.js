@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
-import NotFound from './NotFound';
-import noImage from '../img/noImage.jpeg';
 import SearchPets from './SearchPets';
 import {
     Card,
@@ -72,6 +71,7 @@ const PetsList = () => {
                     if(val.title.toLowerCase().includes(searchTerm.toLowerCase()) || val.description.toLowerCase().includes(searchTerm.toLowerCase())){
                         return val;
                     }
+                    else  return undefined;
                 }));
                 console.log(searchData);
                 setLoading(false);
@@ -89,13 +89,12 @@ const PetsList = () => {
         setSearchTerm(value);
     };
 
-    let description = null;
-
     const buildCard = (pet) => {
         return(
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={pet.title}>
                 <Card className={classes.card} variant='outlined'>
                     <CardActionArea>
+                    <Link to={`/pets/${pet.title}`}>
                         <CardMedia 
                             className={classes.media}
                             component='img'
@@ -117,6 +116,7 @@ const PetsList = () => {
                                 {pet.description}
                             </Typography>
                         </CardContent>
+                        </Link>
                     </CardActionArea>
                 </Card>
             </Grid>
@@ -124,9 +124,9 @@ const PetsList = () => {
     }
 
     if(searchTerm){
-        card = searchData && searchData.map((pet) => {
-            return buildCard(pet);
-        });
+            card = searchData && searchData.map((pet) => {
+                return buildCard(pet);
+            });
     }else{
         card = petsData && petsData.map((pet) => {
             return buildCard(pet);
